@@ -5,9 +5,7 @@ import android.os.AsyncTask;
 
 public class Internete extends AsyncTask {
     private String id;
-    private String temperatura;
-    private String viento;
-    private String cielo;
+    private Tiempo tiempo;
 
 
     public Internete(){
@@ -15,10 +13,15 @@ public class Internete extends AsyncTask {
 
     }
 
+
+
     public Internete(String id){
         super();
         this.id = id;
     }
+
+
+
     @Override
     protected Object doInBackground(Object[] objects) {
 
