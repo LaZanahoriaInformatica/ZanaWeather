@@ -46,7 +46,20 @@ public class ManejadorSax extends DefaultHandler{
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         switch (localName){
-            case ""
+            case "direccion":
+                if(estado == VIENTO)tiempo.setViento(cadena);
+                break;
+            case "velocidad":
+                if(estado == VIENTO){
+                    tiempo.setViento(tiempo.getViento()+cadena+"Km/h");
+                    estado = EMPEZADO;
+                }
+            case "temperatura":
+                sacarLinea();
+                break;
+            case "dia":
+                estado = FINALIZADO;
+                break;
         }
     }
 
@@ -67,6 +80,8 @@ public class ManejadorSax extends DefaultHandler{
                     if((fecha.get(Calendar.HOUR_OF_DAY)+1)>= Integer.valueOf(horas[0]) && (fecha.get(Calendar.HOUR_OF_DAY)+1)<= Integer.valueOf(horas[1]) && estado == EMPEZADO){
                         estado = CIELO;
                         cadena = attributes.getValue("descripcion");
+                        sacarLinea();
+                        estado = EMPEZADO;
                     }
                 }
                 break;
@@ -80,6 +95,36 @@ public class ManejadorSax extends DefaultHandler{
                     }
 
                 }
+                break;
+            case "temperatura":
+                    if(estado == EMPEZADO){
+                        if((fecha.get(Calendar.HOUR_OF_DAY)+1)< 6){
+                            if(attributes.getValue("hora").equalsIgnoreCase("06")){
+                                estado = TEMPERATURA;
+                            }
+                        }
+                        else{
+                            if((fecha.get(Calendar.HOUR_OF_DAY)+1)< 12){
+                                if(attributes.getValue("hora").equalsIgnoreCase("12")){
+                                    estado = TEMPERATURA;
+                                }
+                            }
+                            else{
+                                if((fecha.get(Calendar.HOUR_OF_DAY)+1)< 18){
+                                    if(attributes.getValue("hora").equalsIgnoreCase("18")){
+                                        estado = TEMPERATURA;
+                                    }
+                                }
+                                else{
+                                    if((fecha.get(Calendar.HOUR_OF_DAY)+1)< 24){
+                                        if(attributes.getValue("hora").equalsIgnoreCase("24")){
+                                            estado = TEMPERATURA;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
 
         }
     }
@@ -87,10 +132,7 @@ public class ManejadorSax extends DefaultHandler{
     public void sacarLinea(){
         switch (estado){
             case TEMPERATURA:
-                this.tiempo.setTemperatura(cadena);
-                break;
-            case VIENTO:
-                this.tiempo.setViento(cadena);
+                this.tiempo.setTemperatura(cadena+"ºC");
                 break;
             case CIELO:
                 this.tiempo.setCielo(cadena);
