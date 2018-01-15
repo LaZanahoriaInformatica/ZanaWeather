@@ -5,6 +5,7 @@ import android.net.ParseException;
 import org.xml.sax.InputSource;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
 import javax.xml.parsers.SAXParser;
@@ -21,17 +22,14 @@ public class ParseadorSAX {
     public ParseadorSAX(URL url) {
         InputSource is = null;
         try {
-            is = new InputSource(url.openStream());
+            HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
+            conexion.connect();
+            is = new InputSource(conexion.getInputStream());
             is.setEncoding("ISO-8859-1");
             this.url = is;
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-
 
     }
 
@@ -44,6 +42,7 @@ public class ParseadorSAX {
             SAXParser parser = factory.newSAXParser();
             ManejadorSax manejador = new ManejadorSax();
             parser.parse(this.url, manejador);
+
         } catch(ParseException ex){
             ex.printStackTrace();
         } catch (Exception e){
