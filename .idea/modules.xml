@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ZanaWeather.iml" filepath="$PROJECT_DIR$/ZanaWeather.iml" />
+      <module fileurl="file://C:\AsignaturasIsmael\android\ZanaWeather\ZanaWeather.iml" filepath="C:\AsignaturasIsmael\android\ZanaWeather\ZanaWeather.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://C:\AsignaturasIsmael\android\ZanaWeather\app\app.iml" filepath="C:\AsignaturasIsmael\android\ZanaWeather\app\app.iml" />
     </modules>
   </component>
 </project>

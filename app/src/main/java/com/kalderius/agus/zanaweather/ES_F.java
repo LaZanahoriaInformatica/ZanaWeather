@@ -17,7 +17,7 @@ import java.util.List;
 
 public class ES_F {
 
-    public List leerFichero(String ruta, Activity act){
+    public static List leerFichero(String ruta, Activity act){
         // Declaramos todo lo necesario para leer el fichero
         ArrayList<Poblacion> listapoblaciones=new ArrayList<Poblacion>();
         BufferedReader bfr = null;
