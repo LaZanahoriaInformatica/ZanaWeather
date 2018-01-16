@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.kalderius.agus.zanaweather.GestionWifi">
+    tools:context="com.kalderius.agus.zanaweather.actividad_wifi">
 
     <TextView
         android:id="@+id/textView"

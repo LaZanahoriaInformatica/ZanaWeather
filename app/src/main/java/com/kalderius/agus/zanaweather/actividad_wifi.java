@@ -18,7 +18,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GestionWifi extends AppCompatActivity {
+public class actividad_wifi extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +77,7 @@ public class GestionWifi extends AppCompatActivity {
         //Opcion Emergencia
         //startActivity(new Intent(WifiManager.ACTION_PICK_WIFI_NETWORK));
 
-        Toast.makeText(GestionWifi.this,""+red.SSID+" "+Tipodepass(red),Toast.LENGTH_LONG).show();
+        Toast.makeText(actividad_wifi.this,""+red.SSID+" "+red.capabilities,Toast.LENGTH_LONG).show();
     }
 
     public void conectaopen(WifiManager wifimanager,WifiConfiguration wifiConfig){
@@ -90,7 +90,7 @@ public class GestionWifi extends AppCompatActivity {
         wifiConfig.preSharedKey = String.format("\"%s\"",clavewpa);
 
         int netId = wifimanager.addNetwork(wifiConfig);
-        Toast.makeText(GestionWifi.this,netId+"",Toast.LENGTH_LONG).show();
+        Toast.makeText(actividad_wifi.this,netId+"",Toast.LENGTH_LONG).show();
         wifimanager.disconnect();
         wifimanager.enableNetwork(netId, true);
         wifimanager.reconnect();
