@@ -2,6 +2,7 @@ package com.kalderius.agus.zanaweather;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
@@ -116,6 +117,7 @@ public class actividad_wifi extends AppCompatActivity {
         final String[] cla = {""};
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("SSID: "+red.SSID);
+        edittext.setTextColor(Color.BLACK);
         alert.setMessage("Introduce Clave:");
 
         alert.setView(edittext);

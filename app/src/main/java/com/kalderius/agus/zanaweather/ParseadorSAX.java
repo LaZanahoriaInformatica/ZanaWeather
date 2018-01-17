@@ -11,17 +11,16 @@ import java.net.URL;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-/**
- * Created by Agus on 15/01/2018.
- */
 
 public class ParseadorSAX {
     private InputSource url;
+    private Internete in;
 
 
-    public ParseadorSAX(URL url) {
+    public ParseadorSAX(URL url, Internete in) {
         InputSource is = null;
         try {
+            this.in = in;
             HttpURLConnection conexion = (HttpURLConnection) url.openConnection();
             conexion.connect();
             is = new InputSource(conexion.getInputStream());
@@ -40,7 +39,7 @@ public class ParseadorSAX {
         try
         {
             SAXParser parser = factory.newSAXParser();
-            ManejadorSax manejador = new ManejadorSax();
+            ManejadorSax manejador = new ManejadorSax(in);
             parser.parse(this.url, manejador);
 
         } catch(ParseException ex){

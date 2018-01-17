@@ -3,6 +3,7 @@ package com.kalderius.agus.zanaweather;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -43,12 +44,14 @@ Tiempo tiempo;
         tvCielo=(TextView) findViewById(R.id.tvCielo);
         tvPoblacion=(TextView) findViewById(R.id.tvPoblacion);
         tvTemp= (TextView) findViewById(R.id.tvTemp);
+        tvViento = findViewById(R.id.tvViento);
         adapter=new ArrayAdapter(main,R.layout.support_simple_spinner_dropdown_item);
-        listaPoblaciones=ES_F.leerFichero(ruta,main);
+        poblacion = new Poblacion("13082","Tomelloso");
+        /*listaPoblaciones=ES_F.leerFichero(ruta,main);
         for (int i=0;i<listaPoblaciones.size();i++){
             poblacion=listaPoblaciones.get(i);
             adapter.add(poblacion.getNombre());
-        }
+        }*/
         spPoblaciones.setAdapter(adapter);
         spPoblaciones.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -94,15 +97,19 @@ Tiempo tiempo;
         }
     }
     public void recogerTemp(){
-        Internete internete=new Internete(poblacion.getId());
+        Internete internete=new Internete(poblacion.getId(), this);
         internete.execute();
-        tiempo=internete.getTiempo();
+        while(!internete.isCancelled()){
+
+        }
+        tiempo = internete.getTiempo();
         temp=tiempo.getTemperatura();
         viento=tiempo.getViento();
         cielo=tiempo.getCielo();
         tvTemp.setText(temp);
         tvCielo.setText(cielo);
         tvViento.setText(viento);
+
     }
 
 }

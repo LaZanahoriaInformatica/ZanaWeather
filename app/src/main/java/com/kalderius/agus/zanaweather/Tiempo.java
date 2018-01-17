@@ -1,9 +1,5 @@
 package com.kalderius.agus.zanaweather;
 
-/**
- * Created by Agus on 15/01/2018.
- */
-
 public class Tiempo {
     private String temperatura;
     private String viento;
