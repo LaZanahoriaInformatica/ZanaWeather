@@ -13,6 +13,9 @@ public class Poblacion {
         Nombre = nombre;
     }
 
+    public Poblacion() {
+    }
+
     public String getId() {
         return id;
     }
@@ -27,5 +30,10 @@ public class Poblacion {
 
     public void setNombre(String nombre) {
         Nombre = nombre;
+    }
+
+    @Override
+    public String toString() {
+        return "Poblacion con Nombre='" + Nombre + "'";
     }
 }
