@@ -66,7 +66,7 @@ public class actividad_wifi extends AppCompatActivity {
 
         //Opcion Emergencia
         //startActivity(new Intent(WifiManager.ACTION_PICK_WIFI_NETWORK));
-        
+
     }
 
     public String Tipodepass(ScanResult scanResult) {
