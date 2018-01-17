@@ -1,5 +1,6 @@
 package com.kalderius.agus.zanaweather;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -48,37 +49,72 @@ public class actividad_wifi extends AppCompatActivity {
         });
     }
 
-    public void configuraconexion(ScanResult red, WifiManager wifimanager){
+    public void configuraconexion(ScanResult red,WifiManager wifimanager){
 
         WifiConfiguration wifiConfig = new WifiConfiguration();
 
         wifiConfig.SSID = String.format("\"%s\"",red.SSID);
 
-        switch ( Tipodepass(red)) {
-            case "OPEN":
-                //Aqui se configura las propiedades para una red abierta
-                wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-                conectaopen(wifimanager,wifiConfig);
-                break;
-            case "WEP":
-                String clavewep="";
-                break;
-            case "WPA2":
-                dialogoclave(red,wifimanager,wifiConfig);
-                //wifiConfig.preSharedKey = String.format("\"%s\"",clavewpa);
-                //conectawpa(wifimanager,wifiConfig);
-                break;
+        if(Tipodepass(red).equals("OPEN")){
+            wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+            conectaopen(wifimanager,wifiConfig);
         }
-        //dialogoclave(red);
-        //clave=dialogoclave2(red);
-        //Toast.makeText(this,clave,Toast.LENGTH_SHORT).show();
-
+        else{
+            dialogoclave(red,wifimanager,wifiConfig);
+        }
 
 
         //Opcion Emergencia
         //startActivity(new Intent(WifiManager.ACTION_PICK_WIFI_NETWORK));
+        
+    }
 
-        Toast.makeText(actividad_wifi.this,""+red.SSID+" "+red.capabilities,Toast.LENGTH_LONG).show();
+    public String Tipodepass(ScanResult scanResult) {
+
+
+        final String cap = scanResult.capabilities;
+        final String[] tipos = { "WEP", "WPA2","WPA"};
+
+        for (int i = 0; i < tipos.length; i++) {
+            if (cap.contains(tipos[i])) {
+                return tipos[i];
+            }
+        }
+
+        return "OPEN";
+    }
+
+    @SuppressLint("ResourceAsColor")
+    public void dialogoclave(final ScanResult red, final WifiManager wifimanager, final WifiConfiguration wifiConfig){
+        final EditText edittext = new EditText(getApplicationContext());
+        final String[] cla = {""};
+        edittext.setBackgroundColor(R.color.colorPrimary);
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("SSID: "+red.SSID);
+        alert.setMessage("Introduce Clave:");
+
+        alert.setView(edittext);
+
+        alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //cla[0] = edittext.getText().toString();
+                switch ( Tipodepass(red)) {
+                    case "WEP":
+                        //String clavewep="";
+                        conectawep(wifimanager, wifiConfig, edittext.getText().toString());
+                        break;
+                    case "WPA2":
+                        conectawpa(wifimanager, wifiConfig, edittext.getText().toString());
+                        break;
+                    case "WPA":
+                        conectawpa(wifimanager, wifiConfig, edittext.getText().toString());
+                        break;
+                }
+
+            }
+        });
+
+        alert.show();
     }
 
     public void conectaopen(WifiManager wifimanager,WifiConfiguration wifiConfig){
@@ -91,44 +127,21 @@ public class actividad_wifi extends AppCompatActivity {
         wifiConfig.preSharedKey = String.format("\"%s\"",clavewpa);
 
         int netId = wifimanager.addNetwork(wifiConfig);
-        Toast.makeText(actividad_wifi.this,netId+"",Toast.LENGTH_LONG).show();
         wifimanager.disconnect();
         wifimanager.enableNetwork(netId, true);
         wifimanager.reconnect();
     }
 
-    public String Tipodepass(ScanResult scanResult) {
+    public void conectawep(WifiManager wifimanager,WifiConfiguration wifiConfig,String clavewep){
+        wifiConfig.wepKeys[0] = "\"" + clavewep + "\"";
+        wifiConfig.wepTxKeyIndex = 0;
+        wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+        wifiConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
 
-
-        final String cap = scanResult.capabilities;
-        final String[] tipos = { "WEP", "WPA2","WPA" };
-
-        for (int i = 0; i < tipos.length; i++) {
-            if (cap.contains(tipos[i])) {
-                return tipos[i];
-            }
-        }
-
-        return "OPEN";
+        int netId = wifimanager.addNetwork(wifiConfig);
+        wifimanager.disconnect();
+        wifimanager.enableNetwork(netId, true);
+        wifimanager.reconnect();
     }
 
-    public void dialogoclave(ScanResult red, final WifiManager wifimanager, final WifiConfiguration wifiConfig){
-        final EditText edittext = new EditText(getApplicationContext());
-        final String[] cla = {""};
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("SSID: "+red.SSID);
-        edittext.setTextColor(Color.BLACK);
-        alert.setMessage("Introduce Clave:");
-
-        alert.setView(edittext);
-
-        alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                //cla[0] = edittext.getText().toString();
-                conectawpa(wifimanager,wifiConfig,edittext.getText().toString());
-            }
-        });
-
-        alert.show();
-    }
 }
