@@ -33,6 +33,10 @@ WifiManager wifiManager;
 String temp,viento,cielo;
 Tiempo tiempo;
 
+    public Context getContext() {
+        return MainActivity.this;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +50,11 @@ Tiempo tiempo;
         tvTemp= (TextView) findViewById(R.id.tvTemp);
         tvViento = findViewById(R.id.tvViento);
         adapter=new ArrayAdapter(main,R.layout.support_simple_spinner_dropdown_item);
-        poblacion = new Poblacion("13082","Tomelloso");
-        /*listaPoblaciones=ES_F.leerFichero(ruta,main);
+        listaPoblaciones=ES_F.leerFichero(ruta,main);
         for (int i=0;i<listaPoblaciones.size();i++){
             poblacion=listaPoblaciones.get(i);
             adapter.add(poblacion.getNombre());
-        }*/
+        }
         spPoblaciones.setAdapter(adapter);
         spPoblaciones.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -69,6 +72,7 @@ Tiempo tiempo;
             @Override
             public void onClick(View view) {
                 comprobarDatos();
+
             }
         });
 
@@ -103,10 +107,14 @@ Tiempo tiempo;
 
         }
         tiempo = internete.getTiempo();
-        temp=tiempo.getTemperatura();
+
+        //temp=tiempo.getTemperatura();
+        temp = "2";
+        Notificador noti = new Notificador(Integer.parseInt(temp), this);
+        if(Integer.parseInt(temp)< 4 || Integer.parseInt(temp) >= 35) noti.lanzarNotificacion();
         viento=tiempo.getViento();
         cielo=tiempo.getCielo();
-        tvTemp.setText(temp);
+        tvTemp.setText(temp+"ºC");
         tvCielo.setText(cielo);
         tvViento.setText(viento);
 

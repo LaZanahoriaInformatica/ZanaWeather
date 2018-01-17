@@ -11,11 +11,11 @@ import android.support.v4.app.NotificationCompat;
 
 public class Notificador {
     private int Temperatura;
-    public Context cont;
+    public MainActivity cont;
 
-    public Notificador(int temperatura, Context conte) {
+    public Notificador(int temperatura, MainActivity main) {
         Temperatura = temperatura;
-        cont=conte;
+        cont=main;
     }
 
     public Notificador() {
@@ -25,12 +25,19 @@ public class Notificador {
         if(Temperatura<4){
             NotificationManager notificationManager = (NotificationManager)
                     cont.getSystemService(Context.NOTIFICATION_SERVICE);
-            NotificationCompat.Builder notificationBuilder = new
-                    NotificationCompat.Builder(cont, "CanalFrio")
+            NotificationCompat.Builder notificationBuilder;
+            notificationBuilder = new
+                    NotificationCompat.Builder(cont.getContext(), "Canal_Notificaciones_1")
                     .setSmallIcon(R.drawable.copo_de_nieve)
-                    .setContentTitle("Alerta por Calor")
+                    .setContentTitle("Alerta por Frio")
                     .setContentText("En tu poblacion  hay "+Temperatura+" ºC");
-            notificationManager.notify(1, notificationBuilder.build());
+            try{
+                notificationManager.notify(1, notificationBuilder.build());
+            }
+            catch (NullPointerException es){
+                es.printStackTrace();
+            }
+
         }else if(Temperatura>=35){
 
             NotificationManager notificationManager = (NotificationManager)

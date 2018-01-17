@@ -16,17 +16,19 @@ public class ManejadorSax extends DefaultHandler{
     private Tiempo tiempo;
     private Calendar fecha;
     private String cadena;
-    private int contador;
+    private boolean candado;
     private int estado;
     private Internete in;
     public final int EMPEZADO = 0;
     public final int TEMPERATURA = 1;
     public final int VIENTO = 2;
     public final int CIELO = 3;
+    public final int DATOTEMP = 5;
     public final int FINALIZADO = 4;
 
     public ManejadorSax(Internete in) {
         super();
+        candado = true;
         this.in = in;
         this.tiempo = new Tiempo();
         cadena = new String();
@@ -44,7 +46,7 @@ public class ManejadorSax extends DefaultHandler{
         cadena = "";
         for (char c :
                 ch) {
-            cadena = cadena + c;
+            cadena = cadena +" "+ c;
         }
     }
 
@@ -59,16 +61,19 @@ public class ManejadorSax extends DefaultHandler{
         switch (localName){
             case "direccion":
                  trozos = cadena.split(" ");
-                if(estado == VIENTO)tiempo.setViento(trozos[0]);
+                if(estado == VIENTO && candado)tiempo.setViento(trozos[1]);
                 break;
             case "velocidad":
-                if(estado == VIENTO){
+                if(estado == VIENTO && candado){
                      trozos = cadena.split(" ");
-                    tiempo.setViento(tiempo.getViento()+trozos[0]+"Km/h");
-                    estado = EMPEZADO;
+                    tiempo.setViento(tiempo.getViento()+" "+trozos[1]+"Km/h");
+                    candado = false;
                 }
-            case "temperatura":
-                sacarLinea();
+            case "dato":
+                if (estado== DATOTEMP) {
+                    sacarLinea();
+                }
+
                 break;
             case "dia":
                 estado = FINALIZADO;
@@ -111,36 +116,38 @@ public class ManejadorSax extends DefaultHandler{
 
                     }
                     break;
+                case "temperatura":
+                    if(estado == VIENTO) estado = TEMPERATURA;
+                    break;
                 case "dato":
-                    if(estado == EMPEZADO){
+                    if(estado == TEMPERATURA){
                         if((fecha.get(Calendar.HOUR_OF_DAY)+1)< 6){
                             if(attributes.getValue("hora").equalsIgnoreCase("06")){
-                                estado = TEMPERATURA;
+                                estado = DATOTEMP;
                             }
                         }
                         else{
                             if((fecha.get(Calendar.HOUR_OF_DAY)+1)< 12){
                                 if(attributes.getValue("hora").equalsIgnoreCase("12")){
-                                    estado = TEMPERATURA;
+                                    estado = DATOTEMP;
                                 }
                             }
                             else{
                                 if((fecha.get(Calendar.HOUR_OF_DAY)+1)< 18){
                                     if(attributes.getValue("hora").equalsIgnoreCase("18")){
-                                        estado = TEMPERATURA;
+                                        estado = DATOTEMP;
                                     }
                                 }
                                 else{
                                     if((fecha.get(Calendar.HOUR_OF_DAY)+1)< 24){
                                         if(attributes.getValue("hora").equalsIgnoreCase("24")){
-                                            estado = TEMPERATURA;
+                                            estado = DATOTEMP;
                                         }
                                     }
                                 }
                             }
                         }
                     }
-
             }
         }
 
@@ -149,9 +156,16 @@ public class ManejadorSax extends DefaultHandler{
     public void sacarLinea(){
         String[] trozos;
         switch (estado){
-            case TEMPERATURA:
+            case DATOTEMP:
                 trozos = cadena.split(" ");
-                this.tiempo.setTemperatura(trozos[0]+"ºC");
+                try{
+                    this.tiempo.setTemperatura(trozos[1]+Integer.parseInt(trozos[2]));
+                }
+                catch(NumberFormatException ex){
+                    this.tiempo.setTemperatura(trozos[1]);
+                }
+                estado = EMPEZADO;
+
                 break;
             case CIELO:
                 trozos = cadena.split(" ");
