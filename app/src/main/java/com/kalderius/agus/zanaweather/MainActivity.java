@@ -103,7 +103,7 @@ Tiempo tiempo;
     public void recogerTemp(){
         Internete internete=new Internete(poblacion.getId(), this);
         internete.execute();
-        while(!internete.isCancelled()){
+        while(tiempo == null){
 
         }
         tiempo = internete.getTiempo();
