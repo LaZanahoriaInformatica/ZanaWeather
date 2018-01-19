@@ -41,19 +41,17 @@ public class Internete extends AsyncTask {
         this.tiempo = tiempo;
     }
 
+
     @Override
     protected Object doInBackground(Object[] objects) {
-
         try {
             ParseadorSAX parseador = new ParseadorSAX(new URL("http://www.aemet.es/xml/municipios/localidad_"+this.id+".xml"), this);
             parseador.parse();
             this.act.tiempo = tiempo;
+            this.cancel(true);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-
         return null;
     }
-
-
 }
