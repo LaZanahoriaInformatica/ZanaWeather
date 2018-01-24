@@ -48,6 +48,7 @@ public class ParseadorSAX {
             ManejadorSax manejador = new ManejadorSax(in);
             parser.parse(this.url, manejador);
 
+
         } catch(ParseException ex){
             ex.printStackTrace();
         } catch (Exception e){
