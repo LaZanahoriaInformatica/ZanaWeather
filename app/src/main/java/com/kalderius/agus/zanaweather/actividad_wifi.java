@@ -72,6 +72,7 @@ public class actividad_wifi extends AppCompatActivity {
             //Red abierta conecta direcmente
             wifiConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
             conectaopen(wifimanager,wifiConfig);
+            actividad_wifi.this.finish();
         }
         else{
             //Red con clave procedemos a solicitarla

@@ -121,19 +121,21 @@ Tiempo tiempo;
     public void recogerTemp(){
         Internete internete=new Internete(poblacion.getId(), this);
         internete.execute();
+        //Solución para esperar que se acabe de recoger la información
         while(tiempo == null){
 
         }
-        tiempo = internete.getTiempo();
-
         temp=tiempo.getTemperatura();
         Notificador noti = new Notificador(Integer.parseInt(temp), this);
+        //Si la temperatura es menor a 4 o mayor que 35 se llama a la clase que lanza las notificaciones.
         if(Integer.parseInt(temp)< 4 || Integer.parseInt(temp) >= 35) noti.lanzarNotificacion();
         viento=tiempo.getViento();
         cielo=tiempo.getCielo();
         tvTemp.setText(temp+"ºC");
         tvCielo.setText(cielo);
         tvViento.setText(viento);
+        //Se resetea el tiempo para evitar errores con el bucle.
+        tiempo = null;
 
     }
 

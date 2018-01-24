@@ -6,7 +6,9 @@ import android.os.AsyncTask;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-
+/**
+ * Clase que hace la funcion en segundo plano
+ */
 public class Internete extends AsyncTask {
     private String id;
     private Tiempo tiempo;
@@ -41,7 +43,11 @@ public class Internete extends AsyncTask {
         this.tiempo = tiempo;
     }
 
-
+    /**
+     * método que se ejecuta en segundo plano cuando se usa el metodo execute del objeto de esta clase
+     * @param objects
+     * @return
+     */
     @Override
     protected Object doInBackground(Object[] objects) {
         try {

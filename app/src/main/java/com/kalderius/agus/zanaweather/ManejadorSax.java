@@ -35,15 +35,17 @@ public class ManejadorSax extends DefaultHandler{
         fecha = Calendar.getInstance();
     }
 
-
-    @Override
-    public void startDocument() throws SAXException {
-
-    }
-
+    /**
+     * Metodo que se ejecuta cuando se esta parseando el contenido de una etiqueta
+     * @param ch
+     * @param start
+     * @param length
+     * @throws SAXException
+     */
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
         cadena = "";
+        //Para cada caracter dentro de la cadena de texto
         for (char c :
                 ch) {
             cadena = cadena +" "+ c;
@@ -52,6 +54,7 @@ public class ManejadorSax extends DefaultHandler{
 
     @Override
     public void endDocument() throws SAXException {
+        //Cuando acabe el documento se setea el tiempo de la clase principal
         this.in.setTiempo(tiempo);
     }
 
@@ -92,11 +95,14 @@ public class ManejadorSax extends DefaultHandler{
                         estado = EMPEZADO;
                     }
                     break;
+                    //Si la etiqueta se llama estado_cielo
                 case "estado_cielo":
+                    //Si el intervalo de horas se encuentra fuera de los grupos grandes de horas
                     if(attributes != null && !attributes.getValue("periodo").equalsIgnoreCase("00-24") &&
                             !attributes.getValue("periodo").equalsIgnoreCase("00-12") &&
                             !attributes.getValue("periodo").equalsIgnoreCase("00-06")){
                         String[] horas = attributes.getValue("periodo").split("-");
+                        //Si la hora coincide con la hora del equipo
                         if((fecha.get(Calendar.HOUR_OF_DAY)+1)>= Integer.valueOf(horas[0]) && (fecha.get(Calendar.HOUR_OF_DAY)+1)<= Integer.valueOf(horas[1]) && estado == EMPEZADO){
                             estado = CIELO;
                             cadena = attributes.getValue("descripcion");
@@ -117,10 +123,13 @@ public class ManejadorSax extends DefaultHandler{
                     }
                     break;
                 case "temperatura":
+                    //Si viene de leer el viento se cambia el estado a temperatura
                     if(estado == VIENTO) estado = TEMPERATURA;
                     break;
                 case "dato":
                     if(estado == TEMPERATURA){
+                        //Si el estado es temperatura y la hora coincide con la hora actual se cambia el estado para coger el dato
+
                         if((fecha.get(Calendar.HOUR_OF_DAY)+1)< 6){
                             if(attributes.getValue("hora").equalsIgnoreCase("06")){
                                 estado = DATOTEMP;
@@ -157,6 +166,7 @@ public class ManejadorSax extends DefaultHandler{
         String[] trozos;
         switch (estado){
             case DATOTEMP:
+                //Si se puede coger el dato de la temperatura se hace un split de la linea ya que viene con palabras extra
                 trozos = cadena.split(" ");
                 try{
                     this.tiempo.setTemperatura(trozos[1]+Integer.parseInt(trozos[2]));
@@ -168,8 +178,7 @@ public class ManejadorSax extends DefaultHandler{
 
                 break;
             case CIELO:
-                trozos = cadena.split(" ");
-                this.tiempo.setCielo(trozos[0]);
+                this.tiempo.setCielo(cadena);
                 break;
         }
     }
