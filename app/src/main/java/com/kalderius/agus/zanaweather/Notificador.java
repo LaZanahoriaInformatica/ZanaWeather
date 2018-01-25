@@ -44,7 +44,7 @@ public class Notificador { //Clase para mostrar las notificaciones
                     cont.getSystemService(Context.NOTIFICATION_SERVICE);//Se crea el constructor de la notificacion
             NotificationCompat.Builder notificationBuilder = new//Se declara la notificacion
                     NotificationCompat.Builder(cont, "CanalCalor")//Se declaran los valores de la notificacion
-                    .setSmallIcon(R.drawable.Sol_naranja)//Se declara el icono
+                    .setSmallIcon(R.drawable.copo_de_nieve)//Se declara el icono
                     .setContentTitle("Alerta por Calor")//Se declara el titulo
                     .setContentText("En tu poblacion  hay "+Temperatura+" ºC");//Se declara el contenido de la notificacion
             try{//Evita fallos
