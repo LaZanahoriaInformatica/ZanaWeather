@@ -9,46 +9,50 @@ import android.support.v4.app.NotificationCompat;
  * Created by ivm19 on 16/01/2018.
  */
 
-public class Notificador {
-    private int Temperatura;
-    public MainActivity cont;
+public class Notificador { //Clase para mostrar las notificaciones
+    private int Temperatura;//Entero para marcar el tipo de notificacion
+    public MainActivity cont;//contexto para que puedan lanzarse las notificaciones
 
-    public Notificador(int temperatura, MainActivity main) {
+    public Notificador(int temperatura, MainActivity main) {//Constructor
         Temperatura = temperatura;
         cont=main;
     }
 
-    public Notificador() {
+    public Notificador() {//Constructor vacio
     }
 
-    public void lanzarNotificacion(){
-        if(Temperatura<4){
+    public void lanzarNotificacion(){//Metodo para lanzar notificacion
+        if(Temperatura<4){//Si la temperatura es menor que 4, hace frio
             NotificationManager notificationManager = (NotificationManager)
-                    cont.getSystemService(Context.NOTIFICATION_SERVICE);
-            NotificationCompat.Builder notificationBuilder;
+                    cont.getSystemService(Context.NOTIFICATION_SERVICE);//Se crea el constructor de la notificacion
+            NotificationCompat.Builder notificationBuilder;//Se declara la notificacion
             notificationBuilder = new
-                    NotificationCompat.Builder(cont.getContext(), "Canal_Notificaciones_1")
-                    .setSmallIcon(R.drawable.copo_de_nieve)
-                    .setContentTitle("Alerta por Frio")
-                    .setContentText("En tu poblacion  hay "+Temperatura+" ºC");
-            try{
-                notificationManager.notify(1, notificationBuilder.build());
+                    NotificationCompat.Builder(cont.getContext(), "Canal_Notificaciones_1")//Sigue declarando la notificacion
+                    .setSmallIcon(R.drawable.copo_de_nieve)//Se declara el icono
+                    .setContentTitle("Alerta por Frio")//Se declara el titulo
+                    .setContentText("En tu poblacion  hay "+Temperatura+" ºC");//Se declara el contenido de la notificacion
+            try{//Evita fallos
+                notificationManager.notify(1, notificationBuilder.build());//Manda la notificacion
             }
             catch (NullPointerException es){
                 es.printStackTrace();
             }
 
-        }else if(Temperatura>=35){
+        }else if(Temperatura>=35){//Si la temperatura es mayor o 35, hace calor
 
             NotificationManager notificationManager = (NotificationManager)
-                    cont.getSystemService(Context.NOTIFICATION_SERVICE);
-            NotificationCompat.Builder notificationBuilder = new
-                    NotificationCompat.Builder(cont, "CanalCalor")
-                    .setSmallIcon(R.drawable.copo_de_nieve)
-                    .setContentTitle("Alerta por Calor")
-                    .setContentText("En tu poblacion  hay "+Temperatura+" ºC");
-            notificationManager.notify(2, notificationBuilder.build());
-
+                    cont.getSystemService(Context.NOTIFICATION_SERVICE);//Se crea el constructor de la notificacion
+            NotificationCompat.Builder notificationBuilder = new//Se declara la notificacion
+                    NotificationCompat.Builder(cont, "CanalCalor")//Se declaran los valores de la notificacion
+                    .setSmallIcon(R.drawable.Sol_naranja)//Se declara el icono
+                    .setContentTitle("Alerta por Calor")//Se declara el titulo
+                    .setContentText("En tu poblacion  hay "+Temperatura+" ºC");//Se declara el contenido de la notificacion
+            try{//Evita fallos
+                notificationManager.notify(2, notificationBuilder.build());//Manda la notificacion
+            }
+            catch (NullPointerException es){
+                es.printStackTrace();
+            }
         }
     }
 }
